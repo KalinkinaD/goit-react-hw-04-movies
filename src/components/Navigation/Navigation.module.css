@@ -1,0 +1,26 @@
+.Navigation {
+  padding: 20px;
+  border-bottom: 1px solid grey;
+  display: flex;
+}
+
+.NavigationLink {
+  color: grey;
+  text-decoration: none;
+}
+
+.NavigationLink:hover {
+  text-decoration: underline;
+}
+
+.navLink:not(:last-child) {
+  margin-right: 10px;
+}
+
+.NavigationLinkActive {
+  color: blue;
+}
+
+.AddInfoLink {
+  padding-left: 10px;
+}

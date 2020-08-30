@@ -1,17 +1,37 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import routes from "./routes";
 
-import NotFound from "./views/NotFound";
+import Navigation from "./components/Navigation/Navigation";
 
+const AsyncHomePage = lazy(() =>
+  import("./views/HomePage" /* webpackChunkName: "HomePage" */)
+);
+
+const AsyncMoviePage = lazy(() =>
+  import("./views/Movies" /* webpackChunkName: "MoviesPage" */)
+);
+
+const AsyncMovieDetails = lazy(() =>
+  import(
+    "./views/MovieDetailsPage/MovieDetailsPage" /* webpackChunkName: "MovieDetailsPage" */
+  )
+);
+
+const AsyncNotFoundPage = lazy(() =>
+  import("./views/NotFound" /* webpackChunkName: "NotFoundPage" */)
+);
 const App = () => (
   <>
-    <Switch>
-      <Route path={routes.home} exact />
-      <Route path={routes.movies} exact />
-      <Route path={routes.movieDetails} />
-      <Route component={NotFound} />
-    </Switch>
+    <Navigation />
+    <Suspense fallback={<h1>Loading...</h1>}>
+      <Switch>
+        <Route path={routes.home} exact component={AsyncHomePage} />
+        <Route path={routes.movies} exact component={AsyncMoviePage} />
+        <Route path={routes.movieDetails} component={AsyncMovieDetails} />
+        <Route component={AsyncNotFoundPage} />
+      </Switch>
+    </Suspense>
   </>
 );
 

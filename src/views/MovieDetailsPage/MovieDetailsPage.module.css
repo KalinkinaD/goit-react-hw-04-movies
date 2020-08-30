@@ -1,0 +1,14 @@
+.backBtn {
+  border: 1px solid grey;
+  border-radius: 4px;
+  content: "\2190";
+}
+
+.movieWrapper {
+  display: flex;
+  border-bottom: 1px solid grey;
+}
+
+.imageWrapper {
+  margin-right: 10px;
+}
