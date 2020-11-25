@@ -3,11 +3,14 @@ import movieApi from "../services/movieApi";
 import getQueryParams from "../services/queryParams";
 import { Link } from "react-router-dom";
 import SearchBox from "../components/searchBox";
+import Spiner from "../components/Loader";
+import style from "./views.module.css";
 
 export default class MoviesPage extends Component {
   state = {
     searchQuery: "",
     findedMovies: [],
+    loading: false,
   };
 
   componentDidMount() {
@@ -27,9 +30,12 @@ export default class MoviesPage extends Component {
   }
 
   fetchMovies = (query) => {
+    this.setState({ loading: true });
     movieApi
       .fetchMovieWithQuery(query)
-      .then((results) => this.setState({ findedMovies: results }));
+      .then((results) => this.setState({ findedMovies: results }))
+      .catch((error) => this.setState({ error }))
+      .finally(() => this.setState({ loading: false }));
   };
 
   handleChangeQuery = (query) => {
@@ -40,10 +46,11 @@ export default class MoviesPage extends Component {
   };
 
   render() {
-    const { findedMovies } = this.state;
+    const { findedMovies, loading } = this.state;
     return (
-      <div>
+      <div className={style.wrapper}>
         <SearchBox onSubmit={this.handleChangeQuery} />
+        {loading && <Spiner />}
         {findedMovies.length > 0 && (
           <ul className="MoviesList">
             {findedMovies.map((movie) => (
@@ -54,7 +61,24 @@ export default class MoviesPage extends Component {
                     state: { from: this.props.location },
                   }}
                 >
-                  {movie.title}
+                  <div
+                    className={style.imgBox}
+                    style={
+                      movie.backdrop_path
+                        ? {
+                            backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+                          }
+                        : {
+                            backgroundImage:
+                              "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSEk-mBRzOOi3YLgngg3UWliWw1xu4QKp_4w&usqp=CAU)",
+                          }
+                    }
+                  ></div>
+                  <div className={style.trendBox}>
+                    <span className={style.trendTitle}>
+                      {movie.title || movie.name}
+                    </span>
+                  </div>
                 </Link>
               </li>
             ))}
